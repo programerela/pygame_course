@@ -10,6 +10,7 @@ color = (35, 95, 135)
 
 GROUND_Y = 330
 dino = pygame.Rect(80, GROUND_Y-50, 45, 50)
+DINO_Speed = 10
 
 clock = pygame.time.Clock()
 
@@ -27,4 +28,15 @@ while running:
         
         pygame.display.flip()
         clock.tick(60) #60FPS
+        
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT]:
+                dino.x -= DINO_Speed
+        if keys[pygame.K_RIGHT]:
+                dino.x += DINO_Speed
+        
+        if dino.left < 0:
+                dino.left = 0
+        if dino.right > WIDTH:
+                dino.right = WIDTH
 pygame.quit()
