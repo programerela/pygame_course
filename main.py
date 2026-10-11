@@ -6,6 +6,7 @@ WIDTH, HEIGHT = 800, 400
 screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
 pygame.display.set_caption("DinoGame")
 font = pygame.font.SysFont("Arial", 45)
+big_font = pygame.font.SysFont("Arial", 80)
 color = (135, 195, 235)
 
 GROUND_Y = 330
@@ -20,9 +21,10 @@ JUMP_SPEED = -16
 on_ground = True
 
 cactus = pygame.Rect(850, GROUND_Y - 60, 30, 60)
-CACTUS_SPEED = 7
 
 game_over = False
+
+score = 0.0
 
 clock = pygame.time.Clock()
 
@@ -41,7 +43,11 @@ while running:
                                 cactus.topleft = (850, GROUND_Y - 60)
                                 on_ground = True
                                 game_over = False
-        if not game_over:                        
+                                score = 0.0
+        if not game_over:   
+                score += 0.1
+                cactus_speed = 7 + int(score) // 100
+                                     
                 dino_velocity_y += GRAVITY
                 dino.y += dino_velocity_y
                 if dino.bottom >= GROUND_Y:
@@ -49,7 +55,7 @@ while running:
                         dino_velocity_y = 0
                         on_ground = True
                 
-                cactus.x -= CACTUS_SPEED
+                cactus.x -= cactus_speed
                 if cactus.right < 0:
                         cactus.x = WIDTH +  random.randint(150, 400)
                 
@@ -61,6 +67,8 @@ while running:
         screen.blit(dino_image, dino)
         pygame.draw.rect(screen, (20, 140, 40), cactus)
         pygame.draw.circle(screen, (200, 190, 0), (WIDTH-100, 100), 30)
+        score_text = font.render(f"Score: {int(score)}", True, (30, 30, 30))
+        screen.blit(score_text, (20, 20))
         
         if game_over:
                 text = font.render("Game Over! Press R to Restart", True, (200, 0, 0))
