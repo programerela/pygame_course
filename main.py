@@ -6,10 +6,12 @@ WIDTH, HEIGHT = 800, 400
 screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
 pygame.display.set_caption("DinoGame")
 font = pygame.font.SysFont("Arial", 45)
-color = (35, 95, 135)
+color = (135, 195, 235)
 
 GROUND_Y = 330
-dino = pygame.Rect(80, GROUND_Y-50, 45, 50)
+dino = pygame.Rect(80, GROUND_Y-50, 60, 70)
+dino_image = pygame.image.load("./assets/images/dino.png").convert_alpha()
+dino_image = pygame.transform.scale(dino_image, (60, 70))
 DINO_Speed = 10
 
 dino_velocity_y= 0
@@ -56,12 +58,12 @@ while running:
         
         screen.fill(color)
         pygame.draw.rect(screen, (80, 180, 80), (0, GROUND_Y, WIDTH, HEIGHT - GROUND_Y))
-        pygame.draw.rect(screen, (40, 40, 40), dino)
+        screen.blit(dino_image, dino)
         pygame.draw.rect(screen, (20, 140, 40), cactus)
         pygame.draw.circle(screen, (200, 190, 0), (WIDTH-100, 100), 30)
         
         if game_over:
-                text = font.render("Game Over! Press R to Restart", True, (255, 0, 0))
+                text = font.render("Game Over! Press R to Restart", True, (200, 0, 0))
                 screen.blit(text, (200, 150))
         
         pygame.display.flip()
