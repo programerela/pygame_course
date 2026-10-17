@@ -13,6 +13,8 @@ GROUND_Y = 330
 dino = pygame.Rect(80, GROUND_Y-50, 60, 70)
 dino_image = pygame.image.load("./assets/images/dino.png").convert_alpha()
 dino_image = pygame.transform.scale(dino_image, (60, 70))
+cactus_image = pygame.image.load("./assets/images/cactus.png").convert_alpha()
+cactus_image = pygame.transform.scale(cactus_image, (40, 60))
 DINO_Speed = 10
 
 dino_velocity_y= 0
@@ -20,7 +22,7 @@ GRAVITY = 1
 JUMP_SPEED = -16
 on_ground = True
 
-cactus = pygame.Rect(850, GROUND_Y - 60, 30, 60)
+cactus = pygame.Rect(850, GROUND_Y - 60, 40, 60)
 
 game_over = False
 
@@ -65,7 +67,7 @@ while running:
         screen.fill(color)
         pygame.draw.rect(screen, (80, 180, 80), (0, GROUND_Y, WIDTH, HEIGHT - GROUND_Y))
         screen.blit(dino_image, dino)
-        pygame.draw.rect(screen, (20, 140, 40), cactus)
+        screen.blit(cactus_image, cactus)
         pygame.draw.circle(screen, (200, 190, 0), (WIDTH-100, 100), 30)
         score_text = font.render(f"Score: {int(score)}", True, (30, 30, 30))
         screen.blit(score_text, (20, 20))
