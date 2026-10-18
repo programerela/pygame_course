@@ -8,8 +8,8 @@ pygame.display.set_caption("DinoGame")
 font = pygame.font.SysFont("Arial", 45)
 big_font = pygame.font.SysFont("Arial", 80)
 color = (135, 195, 235)
-
 GROUND_Y = 330
+
 dino = pygame.Rect(80, GROUND_Y-50, 60, 70)
 dino_image = pygame.image.load("./assets/images/dino.png").convert_alpha()
 dino_image = pygame.transform.scale(dino_image, (60, 70))
@@ -30,12 +30,22 @@ score = 0.0
 
 clock = pygame.time.Clock()
 
+game_started = False
+
+play_button = pygame.Rect(WIDTH//2 - 100, HEIGHT//2 - 35, 200, 70)
+
 running = True
 
 while running:
         for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                         running = False
+                
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                        if not game_started:
+                                if play_button.collidepoint(event.pos):
+                                        game_started = True
+        
                 if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_SPACE and on_ground and not game_over:
                                 dino_velocity_y = JUMP_SPEED
@@ -46,7 +56,7 @@ while running:
                                 on_ground = True
                                 game_over = False
                                 score = 0.0
-        if not game_over:   
+        if game_started and not game_over:   
                 score += 0.1
                 cactus_speed = 7 + int(score) // 100
                                      
@@ -62,7 +72,20 @@ while running:
                         cactus.x = WIDTH +  random.randint(150, 400)
                 
                 if dino.colliderect(cactus):
-                        game_over = True              
+                        game_over = True   
+                                   
+        if not game_started:
+                screen.fill(color)
+                pygame.draw.rect(screen, (80, 180, 80), (0, GROUND_Y, WIDTH, HEIGHT - GROUND_Y))
+                text = big_font.render("Dino Game", True, (30, 30, 30))
+                screen.blit(text, (WIDTH//2 - text.get_width()//2, HEIGHT//2 - 150))
+                pygame.draw.rect(screen, (0, 200, 0), play_button)
+                play_text = font.render("Play", True, (255, 255, 255))
+                screen.blit(play_text, (play_button.x + play_button.width//2 - play_text.get_width()//2,
+                                        play_button.y + play_button.height//2 - play_text.get_height()//2))
+                pygame.display.flip()
+                clock.tick(60)
+                continue
         
         screen.fill(color)
         pygame.draw.rect(screen, (80, 180, 80), (0, GROUND_Y, WIDTH, HEIGHT - GROUND_Y))
