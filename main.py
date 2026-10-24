@@ -11,11 +11,16 @@ color = (135, 195, 235)
 GROUND_Y = 330
 
 dino = pygame.Rect(80, GROUND_Y-50, 60, 70)
-dino_image = pygame.image.load("./assets/images/dino.png").convert_alpha()
-dino_image = pygame.transform.scale(dino_image, (60, 70))
+run_images = [
+        pygame.transform.scale(pygame.image.load("./assets/images/dino_left.png").convert_alpha(), dino.size),
+        pygame.transform.scale(pygame.image.load("./assets/images/dino_right.png").convert_alpha(), dino.size)
+]
 cactus_image = pygame.image.load("./assets/images/cactus.png").convert_alpha()
 cactus_image = pygame.transform.scale(cactus_image, (40, 60))
 DINO_Speed = 10
+
+jump_sound = pygame.mixer.Sound("./assets/sounds/dragon-studio-cartoon-jump-463196.wav")
+hit_sound = pygame.mixer.Sound("./assets/sounds/universfield-powerful-impact-hit-567212.wav")
 
 dino_velocity_y= 0
 GRAVITY = 1
@@ -27,6 +32,9 @@ cactus = pygame.Rect(850, GROUND_Y - 60, 40, 60)
 game_over = False
 
 score = 0.0
+
+animation_timer = 0
+animation_index = 0
 
 clock = pygame.time.Clock()
 
@@ -50,6 +58,7 @@ while running:
                         if event.key == pygame.K_SPACE and on_ground and not game_over:
                                 dino_velocity_y = JUMP_SPEED
                                 on_ground = False
+                                jump_sound.play()
                         if event.key == pygame.K_r and game_over:
                                 dino.topleft = (80, GROUND_Y-50)
                                 cactus.topleft = (850, GROUND_Y - 60)
@@ -58,7 +67,7 @@ while running:
                                 score = 0.0
         if game_started and not game_over:   
                 score += 0.1
-                cactus_speed = 7 + int(score) // 100
+                cactus_speed = 10 + int(score) // 100
                                      
                 dino_velocity_y += GRAVITY
                 dino.y += dino_velocity_y
@@ -71,8 +80,14 @@ while running:
                 if cactus.right < 0:
                         cactus.x = WIDTH +  random.randint(150, 400)
                 
+                animation_timer += 1
+                if animation_timer >= 8:
+                        animation_timer = 0
+                        animation_index = (animation_index + 1) % len(run_images)
+                
                 if dino.colliderect(cactus):
-                        game_over = True   
+                        game_over = True
+                        hit_sound.play()   
                                    
         if not game_started:
                 screen.fill(color)
@@ -89,9 +104,9 @@ while running:
         
         screen.fill(color)
         pygame.draw.rect(screen, (80, 180, 80), (0, GROUND_Y, WIDTH, HEIGHT - GROUND_Y))
-        screen.blit(dino_image, dino)
+        screen.blit(run_images[animation_index], dino)
         screen.blit(cactus_image, cactus)
-        pygame.draw.circle(screen, (200, 190, 0), (WIDTH-100, 100), 30)
+        pygame.draw.circle(screen, (200, 190, 0), (WIDTH-100, 120), 30)
         score_text = font.render(f"Score: {int(score)}", True, (30, 30, 30))
         screen.blit(score_text, (20, 20))
         
