@@ -1,5 +1,6 @@
 import pygame
 from settings import PLAYER_COLOR, TILESIZE
+from dungeon import is_walkable
 
 class Player:
     def __init__(self, col, row):
@@ -8,8 +9,11 @@ class Player:
         self.health = 100
         
     def move(self, dx, dy):
-        self.col += dx
-        self.row += dy
+        new_col = self.col + dx
+        new_row = self.row + dy
+        if is_walkable(new_col, new_row):
+            self.col = new_col
+            self.row = new_row
         
     def draw(self, screen):
         x = self.col * TILESIZE

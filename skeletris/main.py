@@ -1,13 +1,14 @@
 import pygame
 from settings import WIDTH, HEIGHT, FPS, BACKGROUND_COLOR
 from player import Player
+from dungeon import draw_map
 
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Skeletris")
 clock = pygame.time.Clock()
 
-player = Player(3, 3)
+player = Player(1, 1)
 
 running = True
 
@@ -26,6 +27,7 @@ while running:
                 player.move(0, 1)
     
     screen.fill(BACKGROUND_COLOR)
+    draw_map(screen)
     player.draw(screen)
     pygame.display.flip()
     clock.tick(FPS)
